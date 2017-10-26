@@ -6,8 +6,8 @@
 ;--------------------------------
 ;Variables
 
-  !define PRODUCT_NAME "Electrum-LTC"
-  !define PRODUCT_WEB_SITE "https://github.com/pooler/electrum-ltc"
+  !define PRODUCT_NAME "reddelectrum"
+  !define PRODUCT_WEB_SITE "https://github.com/lionzeye/reddelectrum"
   !define PRODUCT_PUBLISHER "Electrum Technologies GmbH"
   !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
 
@@ -16,7 +16,7 @@
 
   ;Name and file
   Name "${PRODUCT_NAME}"
-  OutFile "dist/electrum-ltc-setup.exe"
+  OutFile "dist/reddelectrum-setup.exe"
 
   ;Default installation folder
   InstallDir "$PROGRAMFILES\${PRODUCT_NAME}"
@@ -122,19 +122,19 @@ Section
 
   ;Create desktop shortcut
   DetailPrint "Creating desktop shortcut..."
-  CreateShortCut "$DESKTOP\${PRODUCT_NAME}.lnk" "$INSTDIR\electrum-ltc-${PRODUCT_VERSION}.exe" ""
+  CreateShortCut "$DESKTOP\${PRODUCT_NAME}.lnk" "$INSTDIR\reddelectrum-${PRODUCT_VERSION}.exe" ""
 
   ;Create start-menu items
   DetailPrint "Creating start-menu items..."
   CreateDirectory "$SMPROGRAMS\${PRODUCT_NAME}"
   CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\Uninstall.lnk" "$INSTDIR\Uninstall.exe" "" "$INSTDIR\Uninstall.exe" 0
-  CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}.lnk" "$INSTDIR\electrum-ltc-${PRODUCT_VERSION}.exe" "" "$INSTDIR\electrum-ltc-${PRODUCT_VERSION}.exe" 0
+  CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}.lnk" "$INSTDIR\reddelectrum-${PRODUCT_VERSION}.exe" "" "$INSTDIR\reddelectrum-${PRODUCT_VERSION}.exe" 0
 
   ;Links bitcoin: URI's to Electrum
-  WriteRegStr HKCU "Software\Classes\litecoin" "" "URL:litecoin Protocol"
-  WriteRegStr HKCU "Software\Classes\litecoin" "URL Protocol" ""
-  WriteRegStr HKCU "Software\Classes\litecoin" "DefaultIcon" "$\"$INSTDIR\electrum.ico, 0$\""
-  WriteRegStr HKCU "Software\Classes\litecoin\shell\open\command" "" "$\"$INSTDIR\electrum-ltc-${PRODUCT_VERSION}.exe$\" $\"%1$\""
+  WriteRegStr HKCU "Software\Classes\reddcoin" "" "URL:reddcoin Protocol"
+  WriteRegStr HKCU "Software\Classes\reddcoin" "URL Protocol" ""
+  WriteRegStr HKCU "Software\Classes\reddcoin" "DefaultIcon" "$\"$INSTDIR\electrum.ico, 0$\""
+  WriteRegStr HKCU "Software\Classes\reddcoin\shell\open\command" "" "$\"$INSTDIR\reddelectrum-${PRODUCT_VERSION}.exe$\" $\"%1$\""
 
   ;Adds an uninstaller possibilty to Windows Uninstall or change a program section
   WriteRegStr HKCU "${PRODUCT_UNINST_KEY}" "DisplayName" "$(^Name)"

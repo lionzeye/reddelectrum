@@ -2,16 +2,16 @@
 # sudo desktop-file-install electrum.desktop
 
 [Desktop Entry]
-Comment=Lightweight Litecoin Client
-Exec=electrum-ltc %u
-GenericName[en_US]=Litecoin Wallet
-GenericName=Litecoin Wallet
-Icon=electrum-ltc
-Name[en_US]=Electrum Litecoin Wallet
-Name=Electrum Litecoin Wallet
+Comment=Lightweight Reddcoin Client
+Exec=reddelectrum %u
+GenericName[en_US]=Reddcoin Wallet
+GenericName=Reddcoin Wallet
+Icon=reddelectrum
+Name[en_US]=Electrum Reddcoin Wallet
+Name=Electrum Reddcoin Wallet
 Categories=Finance;Network;
 StartupNotify=false
 Terminal=false
 Type=Application
-MimeType=x-scheme-handler/litecoin;
+MimeType=x-scheme-handler/reddcoin;
 

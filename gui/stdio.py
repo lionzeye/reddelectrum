@@ -17,7 +17,7 @@ class ElectrumGui:
         self.network = daemon.network
         storage = WalletStorage(config.get_wallet_path())
         if not storage.file_exists:
-            print "Wallet not found. try 'electrum-ltc create'"
+            print "Wallet not found. try 'reddelectrum create'"
             exit()
         if storage.is_encrypted():
             password = getpass.getpass('Password:', stream=None)
@@ -164,7 +164,7 @@ class ElectrumGui:
 
     def do_send(self):
         if not is_valid(self.str_recipient):
-            print(_('Invalid Litecoin address'))
+            print(_('Invalid Reddcoin address'))
             return
         try:
             amount = int(Decimal(self.str_amount) * COIN)

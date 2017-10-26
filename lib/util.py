@@ -344,23 +344,10 @@ def time_difference(distance_in_time, include_seconds):
         return "over %d years" % (round(distance_in_minutes / 525600))
 
 mainnet_block_explorers = {
-    'explorer.litecoin.net': ('http://explorer.litecoin.net',
+    'live.reddcoin.com': ('https://live.reddcoin.com',
                         {'tx': 'tx', 'addr': 'address'}),
-    'Blockr.io': ('https://ltc.blockr.io',
-                        {'tx': 'tx/info', 'addr': 'address/info'}),
-    'BlockCypher.com': ('https://live.blockcypher.com/ltc',
-                        {'tx': 'tx', 'addr': 'address'}),
-    'SoChain': ('https://chain.so',
-                        {'tx': 'tx/LTC', 'addr': 'address/LTC'}),
     'system default': ('blockchain:',
                         {'tx': 'tx', 'addr': 'address'}),
-}
-
-testnet_block_explorers = {
-    'SoChain': ('https://chain.so',
-                        {'tx': 'tx/LTCTEST', 'addr': 'address/LTCTEST'}),
-    'system default': ('blockchain:',
-                       {'tx': 'tx', 'addr': 'address'}),
 }
 
 def block_explorer_info():
@@ -393,12 +380,12 @@ def parse_URI(uri, on_pr=None):
 
     if ':' not in uri:
         if not bitcoin.is_address(uri):
-            raise BaseException("Not a litecoin address")
+            raise BaseException("Not a reddcoin address")
         return {'address': uri}
 
     u = urlparse.urlparse(uri)
-    if u.scheme != 'litecoin':
-        raise BaseException("Not a litecoin URI")
+    if u.scheme != 'reddcoin':
+        raise BaseException("Not a reddcoin URI")
     address = u.path
 
     # python for android fails to parse query
@@ -415,7 +402,7 @@ def parse_URI(uri, on_pr=None):
     out = {k: v[0] for k, v in pq.items()}
     if address:
         if not bitcoin.is_address(address):
-            raise BaseException("Invalid litecoin address:" + address)
+            raise BaseException("Invalid reddcoin address:" + address)
         out['address'] = address
     if 'amount' in out:
         am = out['amount']
@@ -466,7 +453,7 @@ def create_URI(addr, amount, message):
         if type(message) == unicode:
             message = message.encode('utf8')
         query.append('message=%s'%urllib.quote(message))
-    p = urlparse.ParseResult(scheme='litecoin', netloc='', path=addr, params='', query='&'.join(query), fragment='')
+    p = urlparse.ParseResult(scheme='reddcoin', netloc='', path=addr, params='', query='&'.join(query), fragment='')
     return urlparse.urlunparse(p)
 
 

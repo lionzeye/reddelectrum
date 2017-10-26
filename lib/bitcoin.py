@@ -36,7 +36,7 @@ from util import print_error, InvalidPassword
 import ecdsa
 import pyaes
 
-# Litecoin network constants
+# Reddcoin network constants
 ADDRTYPE_P2PKH = 61
 ADDRTYPE_P2SH = 5
 ADDRTYPE_P2WPKH = 6
