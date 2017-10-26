@@ -157,6 +157,8 @@ class Blockchain(util.PrintError):
         self._size = os.path.getsize(p)/80 if os.path.exists(p) else 0
 
     def verify_header(self, header, prev_header, bits, target):
+        #disable verification for now
+        return
         prev_hash = hash_header(prev_header)
         _hash = hash_header(header)
         _powhash = pow_hash_header(header)
@@ -171,6 +173,8 @@ class Blockchain(util.PrintError):
 
     def verify_chunk(self, index, data):
         num = len(data) / 80
+        #disable verification
+        self.save_chunk(index, data)
         prev_header = None
         if index != 0:
             prev_header = self.read_header(index*2016 - 1)
