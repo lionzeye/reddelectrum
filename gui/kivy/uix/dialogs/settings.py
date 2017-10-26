@@ -3,12 +3,12 @@ from kivy.factory import Factory
 from kivy.properties import ObjectProperty
 from kivy.lang import Builder
 
-from electrum_ltc.util import base_units
-from electrum_ltc.i18n import languages
-from electrum_ltc_gui.kivy.i18n import _
-from electrum_ltc.plugins import run_hook
-from electrum_ltc import coinchooser
-from electrum_ltc.util import fee_levels
+from reddelectrum.util import base_units
+from reddelectrum.i18n import languages
+from reddelectrum_gui.kivy.i18n import _
+from reddelectrum.plugins import run_hook
+from reddelectrum import coinchooser
+from reddelectrum.util import fee_levels
 
 from choice_dialog import ChoiceDialog
 

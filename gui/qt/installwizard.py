@@ -5,11 +5,11 @@ from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 import PyQt4.QtCore as QtCore
 
-import electrum_ltc as electrum
-from electrum_ltc import Wallet, WalletStorage
-from electrum_ltc.util import UserCancelled, InvalidPassword
-from electrum_ltc.base_wizard import BaseWizard
-from electrum_ltc.i18n import _
+import reddelectrum as electrum
+from reddelectrum import Wallet, WalletStorage
+from reddelectrum.util import UserCancelled, InvalidPassword
+from reddelectrum.base_wizard import BaseWizard
+from reddelectrum.i18n import _
 
 from seed_dialog import SeedLayout, KeysLayout
 from network_dialog import NetworkChoiceLayout
@@ -98,7 +98,7 @@ class InstallWizard(QDialog, MessageBoxMixin, BaseWizard):
     def __init__(self, config, app, plugins, storage):
         BaseWizard.__init__(self, config, storage)
         QDialog.__init__(self, None)
-        self.setWindowTitle('Electrum-LTC  -  ' + _('Install Wizard'))
+        self.setWindowTitle('reddelectrum  -  ' + _('Install Wizard'))
         self.app = app
         self.config = config
         # Set for base base class
@@ -138,7 +138,7 @@ class InstallWizard(QDialog, MessageBoxMixin, BaseWizard):
         hbox.setStretchFactor(inner_vbox, 1)
         outer_vbox.addLayout(hbox)
         outer_vbox.addLayout(Buttons(self.back_button, self.next_button))
-        self.set_icon(':icons/electrum-ltc.png')
+        self.set_icon(':icons/reddelectrum.png')
         self.show()
         self.raise_()
         self.refresh_gui()  # Need for QT on MacOSX.  Lame.
@@ -165,7 +165,7 @@ class InstallWizard(QDialog, MessageBoxMixin, BaseWizard):
         hbox2.addWidget(self.pw_e)
         hbox2.addStretch()
         vbox.addLayout(hbox2)
-        self.set_layout(vbox, title=_('Electrum-LTC wallet'))
+        self.set_layout(vbox, title=_('reddelectrum wallet'))
 
         wallet_folder = os.path.dirname(self.storage.path)
 

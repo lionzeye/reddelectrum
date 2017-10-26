@@ -27,10 +27,10 @@
 import webbrowser
 
 from util import *
-from electrum_ltc.i18n import _
-from electrum_ltc.util import block_explorer_URL, format_satoshis, format_time
-from electrum_ltc.plugins import run_hook
-from electrum_ltc.bitcoin import is_address
+from reddelectrum.i18n import _
+from reddelectrum.util import block_explorer_URL, format_satoshis, format_time
+from reddelectrum.plugins import run_hook
+from reddelectrum.bitcoin import is_address
 
 
 class AddressList(MyTreeWidget):

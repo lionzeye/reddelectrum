@@ -4,14 +4,14 @@ import threading
 from PyQt4.Qt import Qt
 from PyQt4.Qt import QGridLayout, QInputDialog, QPushButton
 from PyQt4.Qt import QVBoxLayout, QLabel, SIGNAL
-from electrum_ltc_gui.qt.util import *
+from reddelectrum_gui.qt.util import *
 from .plugin import TIM_NEW, TIM_RECOVER, TIM_MNEMONIC
 from ..hw_wallet.qt import QtHandlerBase, QtPluginBase
 
-from electrum_ltc.i18n import _
-from electrum_ltc.plugins import hook, DeviceMgr
-from electrum_ltc.util import PrintError, UserCancelled
-from electrum_ltc.wallet import Wallet, Standard_Wallet
+from reddelectrum.i18n import _
+from reddelectrum.plugins import hook, DeviceMgr
+from reddelectrum.util import PrintError, UserCancelled
+from reddelectrum.wallet import Wallet, Standard_Wallet
 
 PASSPHRASE_HELP_SHORT =_(
     "Passphrases allow you to access new wallets, each "
@@ -242,7 +242,7 @@ class QtPlugin(QtPluginBase):
             else:
                 msg = _("Enter the master private key beginning with xprv:")
                 def set_enabled():
-                    from electrum_ltc.keystore import is_xprv
+                    from reddelectrum.keystore import is_xprv
                     wizard.next_button.setEnabled(is_xprv(clean_text(text)))
                 text.textChanged.connect(set_enabled)
                 next_enabled = False

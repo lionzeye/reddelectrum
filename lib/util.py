@@ -35,7 +35,7 @@ import urllib
 import threading
 from i18n import _
 
-base_units = {'LTC':8, 'mLTC':5, 'uLTC':2}
+base_units = {'RDD':8, 'mRDD':5, 'uRDD':2}
 fee_levels = [_('Within 25 blocks'), _('Within 10 blocks'), _('Within 5 blocks'), _('Within 2 blocks'), _('In the next block')]
 
 def normalize_version(v):
@@ -214,7 +214,7 @@ def android_data_dir():
     return PythonActivity.mActivity.getFilesDir().getPath() + '/data'
 
 def android_headers_dir():
-    d = android_ext_dir() + '/org.electrum_ltc.electrum_ltc'
+    d = android_ext_dir() + '/org.reddelectrum.reddelectrum'
     if not os.path.exists(d):
         os.mkdir(d)
     return d
@@ -223,7 +223,7 @@ def android_check_data_dir():
     """ if needed, move old directory to sandbox """
     ext_dir = android_ext_dir()
     data_dir = android_data_dir()
-    old_electrum_dir = ext_dir + '/electrum-ltc'
+    old_electrum_dir = ext_dir + '/reddelectrum'
     if not os.path.exists(data_dir) and os.path.exists(old_electrum_dir):
         import shutil
         new_headers_path = android_headers_dir() + '/blockchain_headers'
@@ -242,11 +242,11 @@ def user_dir():
     if 'ANDROID_DATA' in os.environ:
         return android_check_data_dir()
     elif os.name == 'posix':
-        return os.path.join(os.environ["HOME"], ".electrum-ltc")
+        return os.path.join(os.environ["HOME"], ".reddelectrum")
     elif "APPDATA" in os.environ:
-        return os.path.join(os.environ["APPDATA"], "Electrum-LTC")
+        return os.path.join(os.environ["APPDATA"], "reddelectrum")
     elif "LOCALAPPDATA" in os.environ:
-        return os.path.join(os.environ["LOCALAPPDATA"], "Electrum-LTC")
+        return os.path.join(os.environ["LOCALAPPDATA"], "reddelectrum")
     else:
         #raise Exception("No home directory found in environment variables.")
         return

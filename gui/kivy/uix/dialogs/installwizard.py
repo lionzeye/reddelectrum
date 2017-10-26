@@ -29,7 +29,7 @@ test_xpub = "xpub661MyMwAqRbcEbvVtRRSjqxVnaWVUMewVzMiURAKyYratih4TtBpMypzzefmv8z
 
 Builder.load_string('''
 #:import Window kivy.core.window.Window
-#:import _ electrum_ltc_gui.kivy.i18n._
+#:import _ reddelectrum_gui.kivy.i18n._
 
 
 <WizardTextInput@TextInput>
@@ -556,8 +556,8 @@ class RestoreSeedDialog(WizardDialog):
     def __init__(self, wizard, **kwargs):
         super(RestoreSeedDialog, self).__init__(wizard, **kwargs)
         self._test = kwargs['test']
-        from electrum_ltc.mnemonic import Mnemonic
-        from electrum_ltc.old_mnemonic import words as old_wordlist
+        from reddelectrum.mnemonic import Mnemonic
+        from reddelectrum.old_mnemonic import words as old_wordlist
         self.words = set(Mnemonic('en').wordlist).union(set(old_wordlist))
         self.ids.text_input_seed.text = test_seed if is_test else ''
         self.message = _('Please type your seed phrase using the virtual keyboard.')

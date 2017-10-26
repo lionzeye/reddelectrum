@@ -41,19 +41,19 @@ import PyQt4.QtCore as QtCore
 
 import icons_rc
 
-from electrum_ltc import keystore
-from electrum_ltc.bitcoin import COIN, is_valid, TYPE_ADDRESS
-from electrum_ltc.plugins import run_hook
-from electrum_ltc.i18n import _
-from electrum_ltc.util import (format_time, format_satoshis, PrintError,
+from reddelectrum import keystore
+from reddelectrum.bitcoin import COIN, is_valid, TYPE_ADDRESS
+from reddelectrum.plugins import run_hook
+from reddelectrum.i18n import _
+from reddelectrum.util import (format_time, format_satoshis, PrintError,
                                format_satoshis_plain, NotEnoughFunds,
                                UserCancelled)
-from electrum_ltc import Transaction, mnemonic
-from electrum_ltc import util, bitcoin, commands, coinchooser
-from electrum_ltc import SimpleConfig, paymentrequest
-from electrum_ltc.wallet import Wallet, Multisig_Wallet
+from reddelectrum import Transaction, mnemonic
+from reddelectrum import util, bitcoin, commands, coinchooser
+from reddelectrum import SimpleConfig, paymentrequest
+from reddelectrum.wallet import Wallet, Multisig_Wallet
 try:
-    from electrum_ltc.plot import plot_history
+    from reddelectrum.plot import plot_history
 except:
     plot_history = None
 
@@ -64,7 +64,7 @@ from transaction_dialog import show_transaction
 from fee_slider import FeeSlider
 
 
-from electrum_ltc import ELECTRUM_VERSION
+from reddelectrum import ELECTRUM_VERSION
 import re
 
 from util import *
@@ -89,7 +89,7 @@ class StatusBarButton(QPushButton):
             self.func()
 
 
-from electrum_ltc.paymentrequest import PR_UNPAID, PR_PAID, PR_UNKNOWN, PR_EXPIRED
+from reddelectrum.paymentrequest import PR_UNPAID, PR_PAID, PR_UNKNOWN, PR_EXPIRED
 
 
 class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
@@ -154,7 +154,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
         if self.config.get("is_maximized"):
             self.showMaximized()
 
-        self.setWindowIcon(QIcon(":icons/electrum-ltc.png"))
+        self.setWindowIcon(QIcon(":icons/reddelectrum.png"))
         self.init_menubar()
 
         wrtabs = weakref.proxy(tabs)
@@ -355,7 +355,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
             self.setGeometry(100, 100, 840, 400)
 
     def watching_only_changed(self):
-        title = 'Electrum-LTC %s  -  %s' % (self.wallet.electrum_version,
+        title = 'reddelectrum %s  -  %s' % (self.wallet.electrum_version,
                                             self.wallet.basename().decode('utf8'))
         extra = [self.wallet.storage.get('wallet_type', '?')]
         if self.wallet.is_watching_only():
@@ -509,7 +509,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
 
         help_menu = menubar.addMenu(_("&Help"))
         help_menu.addAction(_("&About"), self.show_about)
-        help_menu.addAction(_("&Official website"), lambda: webbrowser.open("http://electrum-ltc.org"))
+        help_menu.addAction(_("&Official website"), lambda: webbrowser.open("http://reddelectrum.org"))
         help_menu.addSeparator()
         help_menu.addAction(_("&Documentation"), lambda: webbrowser.open("http://docs.electrum.org/")).setShortcut(QKeySequence.HelpContents)
         help_menu.addAction(_("&Report Bug"), self.show_report_bug)
@@ -527,7 +527,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
             self.show_error(_('No donation address for this server'))
 
     def show_about(self):
-        QMessageBox.about(self, "Electrum-LTC",
+        QMessageBox.about(self, "reddelectrum",
             _("Version")+" %s" % (self.wallet.electrum_version) + "\n\n" +
                 _("Electrum's focus is speed, with low resource usage and simplifying Reddcoin. You do not need to perform regular backups, because your wallet can be recovered from a secret phrase that you can memorize or write on paper. Startup times are instant because it operates in conjunction with high-performance servers that handle the most complicated parts of the Reddcoin system."  + "\n\n" +
                 _("Uses icons from the Icons8 icon pack (icons8.com).")))
@@ -535,11 +535,11 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
     def show_report_bug(self):
         msg = ' '.join([
             _("Please report any bugs as issues on github:<br/>"),
-            "<a href=\"https://github.com/pooler/electrum-ltc/issues\">https://github.com/pooler/electrum-ltc/issues</a><br/><br/>",
+            "<a href=\"https://github.com/lionzeye/reddelectrum/issues\">https://github.com/lionzey/reddelectrum/issues</a><br/><br/>",
             _("Before reporting a bug, upgrade to the most recent version of Electrum (latest release or git HEAD), and include the version number in your report."),
             _("Try to explain not only what the bug is, but how it occurs.")
          ])
-        self.show_message(msg, title="Electrum-LTC - " + _("Reporting Bugs"))
+        self.show_message(msg, title="reddelectrum - " + _("Reporting Bugs"))
 
     def notify_transactions(self):
         if not self.network or not self.network.is_connected():
@@ -567,7 +567,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
 
     def notify(self, message):
         if self.tray:
-            self.tray.showMessage("Electrum-LTC", message, QSystemTrayIcon.Information, 20000)
+            self.tray.showMessage("reddelectrum", message, QSystemTrayIcon.Information, 20000)
 
 
 
@@ -620,9 +620,9 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
         if self.decimal_point == 2:
             return 'bits'
         if self.decimal_point == 5:
-            return 'mLTC'
+            return 'mRDD'
         if self.decimal_point == 8:
-            return 'LTC'
+            return 'RDD'
         raise Exception('Unknown base unit')
 
     def connect_fields(self, window, btc_e, fiat_e, fee_e):
@@ -914,7 +914,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
     def new_payment_request(self):
         addr = self.wallet.get_unused_address()
         if addr is None:
-            from electrum_ltc.wallet import Imported_Wallet
+            from reddelectrum.wallet import Imported_Wallet
             if not self.wallet.is_deterministic():
                 msg = [
                     _('No more addresses in your wallet.'),
@@ -2023,7 +2023,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
 
 
     def tx_from_text(self, txt):
-        from electrum_ltc.transaction import tx_from_str, Transaction
+        from reddelectrum.transaction import tx_from_str, Transaction
         try:
             tx = tx_from_str(txt)
             return Transaction(tx)
@@ -2033,7 +2033,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
             return
 
     def read_tx_from_qrcode(self):
-        from electrum_ltc import qrscanner
+        from reddelectrum import qrscanner
         try:
             data = qrscanner.scan_barcode(self.config.get_video_device())
         except BaseException as e:
@@ -2082,7 +2082,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
             self.show_transaction(tx)
 
     def do_process_from_txid(self):
-        from electrum_ltc import transaction
+        from reddelectrum import transaction
         txid, ok = QInputDialog.getText(self, _('Lookup transaction'), _('Transaction ID') + ':')
         if ok and txid:
             txid = str(txid).strip()
@@ -2113,7 +2113,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
         e.setReadOnly(True)
         vbox.addWidget(e)
 
-        defaultname = 'electrum-ltc-private-keys.csv'
+        defaultname = 'reddelectrum-private-keys.csv'
         select_msg = _('Select file to export your private keys to')
         hbox, filename_e, csv_button = filename_field(self, self.config, defaultname, select_msg)
         vbox.addLayout(hbox)
@@ -2197,7 +2197,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
     def do_export_labels(self):
         labels = self.wallet.labels
         try:
-            fileName = self.getSaveFileName(_("Select file to save your labels"), 'electrum-ltc_labels.json', "*.json")
+            fileName = self.getSaveFileName(_("Select file to save your labels"), 'reddelectrum_labels.json', "*.json")
             if fileName:
                 with open(fileName, 'w+') as f:
                     json.dump(labels, f, indent=4, sort_keys=True)
@@ -2210,7 +2210,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
         d = WindowModalDialog(self, _('Export History'))
         d.setMinimumSize(400, 200)
         vbox = QVBoxLayout(d)
-        defaultname = os.path.expanduser('~/electrum-ltc-history.csv')
+        defaultname = os.path.expanduser('~/reddelectrum-history.csv')
         select_msg = _('Select file to export your wallet transactions to')
         hbox, filename_e, csv_button = filename_field(self, self.config, defaultname, select_msg)
         vbox.addLayout(hbox)
@@ -2381,7 +2381,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
         lang_help = _('Select which language is used in the GUI (after restart).')
         lang_label = HelpLabel(_('Language') + ':', lang_help)
         lang_combo = QComboBox()
-        from electrum_ltc.i18n import languages
+        from reddelectrum.i18n import languages
         lang_combo.addItems(languages.values())
         try:
             index = languages.keys().index(self.config.get("language",''))
@@ -2510,9 +2510,9 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
         SSL_id_e.setReadOnly(True)
         id_widgets.append((SSL_id_label, SSL_id_e))
 
-        units = ['LTC', 'mLTC', 'bits']
+        units = ['RDD', 'mRDD', 'bits']
         msg = _('Base unit of your wallet.')\
-              + '\n1LTC=1000mLTC.\n' \
+              + '\n1RDD=1000mRDD.\n' \
               + _(' These settings affects the fields in the Send tab')+' '
         unit_label = HelpLabel(_('Base unit') + ':', msg)
         unit_combo = QComboBox()
@@ -2524,9 +2524,9 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
                 return
             edits = self.amount_e, self.fee_e, self.receive_amount_e
             amounts = [edit.get_amount() for edit in edits]
-            if unit_result == 'LTC':
+            if unit_result == 'RDD':
                 self.decimal_point = 8
-            elif unit_result == 'mLTC':
+            elif unit_result == 'mRDD':
                 self.decimal_point = 5
             elif unit_result == 'bits':
                 self.decimal_point = 2
@@ -2554,7 +2554,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
         block_ex_combo.currentIndexChanged.connect(on_be)
         gui_widgets.append((block_ex_label, block_ex_combo))
 
-        from electrum_ltc import qrscanner
+        from reddelectrum import qrscanner
         system_cameras = qrscanner._find_system_cameras()
         qr_combo = QComboBox()
         qr_combo.addItem("Default","default")

@@ -28,12 +28,12 @@ if platform.system() in ['Linux', 'FreeBSD', 'DragonFly']:
         else:
             usr_share = os.path.expanduser('~/.local/share')
     data_files += [
-        (os.path.join(usr_share, 'applications/'), ['electrum-ltc.desktop']),
-        (os.path.join(usr_share, 'pixmaps/'), ['icons/electrum-ltc.png'])
+        (os.path.join(usr_share, 'applications/'), ['reddelectrum.desktop']),
+        (os.path.join(usr_share, 'pixmaps/'), ['icons/reddelectrum.png'])
     ]
 
 setup(
-    name="Electrum-LTC",
+    name="reddelectrum",
     version=version.ELECTRUM_VERSION,
     install_requires=[
         'pyaes',
@@ -48,40 +48,40 @@ setup(
         'PySocks>=1.6.6',
     ],
     packages=[
-        'electrum_ltc',
-        'electrum_ltc_gui',
-        'electrum_ltc_gui.qt',
-        'electrum_ltc_plugins',
-        'electrum_ltc_plugins.audio_modem',
-        'electrum_ltc_plugins.cosigner_pool',
-        'electrum_ltc_plugins.email_requests',
-        'electrum_ltc_plugins.hw_wallet',
-        'electrum_ltc_plugins.keepkey',
-        'electrum_ltc_plugins.labels',
-        'electrum_ltc_plugins.ledger',
-        'electrum_ltc_plugins.trezor',
-        'electrum_ltc_plugins.digitalbitbox',
-        'electrum_ltc_plugins.virtualkeyboard',
+        'reddelectrum',
+        'reddelectrum_gui',
+        'reddelectrum_gui.qt',
+        'reddelectrum_plugins',
+        'reddelectrum_plugins.audio_modem',
+        'reddelectrum_plugins.cosigner_pool',
+        'reddelectrum_plugins.email_requests',
+        'reddelectrum_plugins.hw_wallet',
+        'reddelectrum_plugins.keepkey',
+        'reddelectrum_plugins.labels',
+        'reddelectrum_plugins.ledger',
+        'reddelectrum_plugins.trezor',
+        'reddelectrum_plugins.digitalbitbox',
+        'reddelectrum_plugins.virtualkeyboard',
     ],
     package_dir={
-        'electrum_ltc': 'lib',
-        'electrum_ltc_gui': 'gui',
-        'electrum_ltc_plugins': 'plugins',
+        'reddelectrum': 'lib',
+        'reddelectrum_gui': 'gui',
+        'reddelectrum_plugins': 'plugins',
     },
     package_data={
-        'electrum_ltc': [
+        'reddelectrum': [
             'currencies.json',
             'www/index.html',
             'wordlist/*.txt',
             'locale/*/LC_MESSAGES/electrum.mo',
         ]
     },
-    scripts=['electrum-ltc'],
+    scripts=['reddelectrum'],
     data_files=data_files,
-    description="Lightweight Litecoin Wallet",
+    description="Lightweight Reddcoin Wallet",
     author="Thomas Voegtlin",
     author_email="thomasv@electrum.org",
     license="MIT Licence",
-    url="http://electrum-ltc.org",
-    long_description="""Lightweight Litecoin Wallet"""
+    url="http://reddelectrum.org",
+    long_description="""Lightweight Reddcoin Wallet"""
 )

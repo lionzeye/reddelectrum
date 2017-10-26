@@ -32,10 +32,10 @@ from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 import PyQt4.QtCore as QtCore
 
-from electrum_ltc import transaction
-from electrum_ltc.bitcoin import base_encode
-from electrum_ltc.i18n import _
-from electrum_ltc.plugins import run_hook
+from reddelectrum import transaction
+from reddelectrum.bitcoin import base_encode
+from reddelectrum.i18n import _
+from reddelectrum.plugins import run_hook
 
 from util import *
 
