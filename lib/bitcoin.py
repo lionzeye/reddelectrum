@@ -37,61 +37,26 @@ import ecdsa
 import pyaes
 
 # Litecoin network constants
-TESTNET = False
-NOLNET = False
-ADDRTYPE_P2PKH = 48
-ADDRTYPE_P2SH = 50
-ADDRTYPE_P2SH_ALT = 5
+ADDRTYPE_P2PKH = 61
+ADDRTYPE_P2SH = 5
 ADDRTYPE_P2WPKH = 6
 XPRV_HEADER = 0x0488ade4
 XPUB_HEADER = 0x0488b21e
-XPRV_HEADER_ALT = 0x019d9cfe
-XPUB_HEADER_ALT = 0x019da462
-HEADERS_URL = "https://electrum-ltc.org/blockchain_headers"
-GENESIS = "12a765e31ffd4059bada1e25190f6e98c99d9714d334efa41a195a7e7e04bfe2"
+XPRV_HEADER_ALT = 0x0488ade4
+XPUB_HEADER_ALT = 0x0488b21e
 
-def set_testnet():
-    global ADDRTYPE_P2PKH, ADDRTYPE_P2SH, ADDRTYPE_P2SH_ALT, ADDRTYPE_P2WPKH
-    global XPRV_HEADER, XPUB_HEADER, XPRV_HEADER_ALT, XPUB_HEADER_ALT
-    global TESTNET, HEADERS_URL
-    global GENESIS
-    TESTNET = True
-    ADDRTYPE_P2PKH = 111
-    ADDRTYPE_P2SH = 58
-    ADDRTYPE_P2SH_ALT = 196
-    ADDRTYPE_P2WPKH = 3
-    XPRV_HEADER = 0x04358394
-    XPUB_HEADER = 0x043587cf
-    XPRV_HEADER_ALT = 0x0436ef7d
-    XPUB_HEADER_ALT = 0x0436f6e1
-    HEADERS_URL = "https://electrum-ltc.org/testnet_headers"
-    GENESIS = "4966625a4b2851d9fdee139e56211a0d88575f59ed816ff5e6a63deb4e3e29a0"
-
-def set_nolnet():
-    global ADDRTYPE_P2PKH, ADDRTYPE_P2SH, ADDRTYPE_P2WPKH
-    global XPRV_HEADER, XPUB_HEADER
-    global NOLNET, HEADERS_URL
-    global GENESIS
-    TESTNET = True
-    ADDRTYPE_P2PKH = 0
-    ADDRTYPE_P2SH = 5
-    ADDRTYPE_P2WPKH = 6
-    XPRV_HEADER = 0x0488ade4
-    XPUB_HEADER = 0x0488b21e
-    HEADERS_URL = "https://headers.electrum.org/nolnet_headers"
-    GENESIS = "663c88be18d07c45f87f910b93a1a71ed9ef1946cad50eb6a6f3af4c424625c6"
-
-
+HEADERS_URL = "https://github.com/ReddcoinCommunityDevelopers/reddcoin-electrum/releases/download/updated_headers/blockchain_headers"
+GENESIS = "b868e0d95a3c3c0e0dadc67ee587aaf9dc8acbf99e3b4b3110fad4eb74c1decc"
 
 ################################## transactions
 
-DUST_SOFT_LIMIT = 100000
-MIN_RELAY_TX_FEE = 100000
+DUST_SOFT_LIMIT = 100000000
+MIN_RELAY_TX_FEE = 1000000
 FEE_STEP = 100000
-MAX_FEE_RATE = 1000000
+MAX_FEE_RATE = 100000000
 FEE_TARGETS = [25, 10, 5, 2]
 
-COINBASE_MATURITY = 100
+COINBASE_MATURITY = 30
 COIN = 100000000
 
 # supported types of transction outputs
