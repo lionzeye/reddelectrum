@@ -470,7 +470,7 @@ def get_scriptPubKey(addr):
         script = '76a9'                                      # op_dup, op_hash_160
         script += push_script(hash_160.encode('hex'))
         script += '88ac'                                     # op_equalverify, op_checksig
-    elif addrtype in [bitcoin.ADDRTYPE_P2SH, bitcoin.ADDRTYPE_P2SH_ALT]:
+    elif addrtype in [bitcoin.ADDRTYPE_P2SH]:
         script = 'a9'                                        # op_hash_160
         script += push_script(hash_160.encode('hex'))
         script += '87'                                       # op_equal

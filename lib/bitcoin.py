@@ -409,7 +409,7 @@ def is_address(addr):
         addrtype, h = bc_address_to_hash_160(addr)
     except Exception:
         return False
-    if addrtype not in [ADDRTYPE_P2PKH, ADDRTYPE_P2SH, ADDRTYPE_P2SH_ALT]:
+    if addrtype not in [ADDRTYPE_P2PKH, ADDRTYPE_P2SH]:
         return False
     return addr == hash_160_to_bc_address(h, addrtype)
 
@@ -421,7 +421,7 @@ def is_p2pkh(addr):
 def is_p2sh(addr):
     if is_address(addr):
         addrtype, h = bc_address_to_hash_160(addr)
-        return addrtype in [ADDRTYPE_P2SH, ADDRTYPE_P2SH_ALT]
+        return addrtype in [ADDRTYPE_P2SH]
 
 def is_private_key(key):
     try:

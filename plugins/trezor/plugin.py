@@ -8,7 +8,7 @@ from functools import partial
 from reddelectrum.bitcoin import (bc_address_to_hash_160, xpub_from_pubkey,
                               public_key_to_p2pkh, EncodeBase58Check,
                               TYPE_ADDRESS, TYPE_SCRIPT,
-                              TESTNET, ADDRTYPE_P2PKH, ADDRTYPE_P2SH, ADDRTYPE_P2SH_ALT)
+                              TESTNET, ADDRTYPE_P2PKH, ADDRTYPE_P2SH)
 from reddelectrum.i18n import _
 from reddelectrum.plugins import BasePlugin, hook
 from reddelectrum.transaction import deserialize, Transaction
@@ -333,7 +333,7 @@ class TrezorCompatiblePlugin(HW_PluginBase):
                         script_type = self.types.PAYTOADDRESS,
                         address_n = address_n,
                     )
-                elif addrtype in [ADDRTYPE_P2SH, ADDRTYPE_P2SH_ALT]:
+                elif addrtype in [ADDRTYPE_P2SH]:
                     address_n = self.client_class.expand_path("/%d/%d"%index)
                     nodes = map(self.ckd_public.deserialize, xpubs)
                     pubkeys = [ self.types.HDNodePathType(node=node, address_n=address_n) for node in nodes]
@@ -356,7 +356,7 @@ class TrezorCompatiblePlugin(HW_PluginBase):
                     addrtype, hash_160 = bc_address_to_hash_160(address)
                     if addrtype == ADDRTYPE_P2PKH:
                         txoutputtype.script_type = self.types.PAYTOADDRESS
-                    elif addrtype in [ADDRTYPE_P2SH, ADDRTYPE_P2SH_ALT]:
+                    elif addrtype in [ADDRTYPE_P2SH]:
                         txoutputtype.script_type = self.types.PAYTOSCRIPTHASH
                     else:
                         raise BaseException('addrtype')
