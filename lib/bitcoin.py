@@ -37,6 +37,8 @@ import ecdsa
 import pyaes
 
 # Reddcoin network constants
+TESTNET = False
+NOLNET = False
 ADDRTYPE_P2PKH = 61
 ADDRTYPE_P2SH = 5
 ADDRTYPE_P2WPKH = 6
@@ -44,19 +46,50 @@ XPRV_HEADER = 0x0488ade4
 XPUB_HEADER = 0x0488b21e
 XPRV_HEADER_ALT = 0x0488ade4
 XPUB_HEADER_ALT = 0x0488b21e
-
 HEADERS_URL = "https://github.com/ReddcoinCommunityDevelopers/reddcoin-electrum/releases/download/updated_headers/blockchain_headers"
 GENESIS = "b868e0d95a3c3c0e0dadc67ee587aaf9dc8acbf99e3b4b3110fad4eb74c1decc"
 
+def set_testnet():
+    global ADDRTYPE_P2PKH, ADDRTYPE_P2SH, ADDRTYPE_P2WPKH
+    global XPRV_HEADER, XPUB_HEADER
+    global TESTNET, HEADERS_URL
+    global GENESIS
+    TESTNET = True
+    ADDRTYPE_P2PKH = 111
+    ADDRTYPE_P2SH = 196
+    ADDRTYPE_P2WPKH = 3
+    XPRV_HEADER = 0x04358394
+    XPUB_HEADER = 0x043587cf
+    XPRV_HEADER_ALT = 0x04358394
+    XPUB_HEADER_ALT = 0x043587cf
+    HEADERS_URL = "https://vialectrum.org/testnet_headers"
+    GENESIS = "770aa712aa08fdcbdecc1c8df1b3e2d4e17a7cf6e63a28b785b32e74c96cb27d"
+
+def set_nolnet():
+    global ADDRTYPE_P2PKH, ADDRTYPE_P2SH, ADDRTYPE_P2WPKH
+    global XPRV_HEADER, XPUB_HEADER
+    global NOLNET, HEADERS_URL
+    global GENESIS
+    TESTNET = True
+    ADDRTYPE_P2PKH = 0
+    ADDRTYPE_P2SH = 5
+    ADDRTYPE_P2WPKH = 6
+    XPRV_HEADER = 0x0488ade4
+    XPUB_HEADER = 0x0488b21e
+    HEADERS_URL = "https://headers.electrum.org/nolnet_headers"
+    GENESIS = "663c88be18d07c45f87f910b93a1a71ed9ef1946cad50eb6a6f3af4c424625c6"
+
+
+
 ################################## transactions
 
-DUST_SOFT_LIMIT = 100000000
-MIN_RELAY_TX_FEE = 1000000
+DUST_SOFT_LIMIT = 100000
+MIN_RELAY_TX_FEE = 100000
 FEE_STEP = 100000
-MAX_FEE_RATE = 100000000
+MAX_FEE_RATE = 1000000
 FEE_TARGETS = [25, 10, 5, 2]
 
-COINBASE_MATURITY = 30
+COINBASE_MATURITY = 100
 COIN = 100000000
 
 # supported types of transction outputs
@@ -203,8 +236,8 @@ def seed_type(x):
         return 'old'
     elif is_new_seed(x):
         return 'standard'
-    #elif TESTNET and is_new_seed(x, version.SEED_PREFIX_SW):
-    #    return 'segwit'
+    elif TESTNET and is_new_seed(x, version.SEED_PREFIX_SW):
+        return 'segwit'
     elif is_new_seed(x, version.SEED_PREFIX_2FA):
         return '2fa'
     return ''
@@ -421,7 +454,7 @@ def is_p2pkh(addr):
 def is_p2sh(addr):
     if is_address(addr):
         addrtype, h = bc_address_to_hash_160(addr)
-        return addrtype in [ADDRTYPE_P2SH]
+        return addrtype == ADDRTYPE_P2SH
 
 def is_private_key(key):
     try:
@@ -459,14 +492,14 @@ def msg_magic(message):
 
 def verify_message(address, sig, message):
     try:
-        h = Hash(msg_magic(message))
-        public_key, compressed = pubkey_from_signature(sig, h)
+        public_key, compressed = pubkey_from_signature(sig, message)
         # check public key using the address
         pubkey = point_to_ser(public_key.pubkey.point, compressed)
         addr = public_key_to_p2pkh(pubkey)
         if address != addr:
             raise Exception("Bad signature")
         # check message
+        h = Hash(msg_magic(message))
         public_key.verify_digest(sig[1:], h, sigdecode = ecdsa.util.sigdecode_string)
         return True
     except Exception as e:
@@ -548,7 +581,7 @@ class MyVerifyingKey(ecdsa.VerifyingKey):
         return klass.from_public_point( Q, curve )
 
 
-def pubkey_from_signature(sig, h):
+def pubkey_from_signature(sig, message):
     if len(sig) != 65:
         raise Exception("Wrong encoding")
     nV = ord(sig[0])
@@ -560,6 +593,7 @@ def pubkey_from_signature(sig, h):
     else:
         compressed = False
     recid = nV - 27
+    h = Hash(msg_magic(message))
     return MyVerifyingKey.from_signature(sig[1:], recid, h, curve = SECP256k1), compressed
 
 
@@ -608,12 +642,12 @@ class EC_KEY(object):
 
 
     def verify_message(self, sig, message):
-        h = Hash(msg_magic(message))
-        public_key, compressed = pubkey_from_signature(sig, h)
+        public_key, compressed = pubkey_from_signature(sig, message)
         # check public key
         if point_to_ser(public_key.pubkey.point, compressed) != point_to_ser(self.pubkey.point, compressed):
             raise Exception("Bad signature")
         # check message
+        h = Hash(msg_magic(message))
         public_key.verify_digest(sig[1:], h, sigdecode = ecdsa.util.sigdecode_string)
 
 
@@ -746,7 +780,7 @@ def deserialize_xkey(xkey, prv):
     c = xkey[13:13+32]
     header = XPRV_HEADER if prv else XPUB_HEADER
     xtype = int('0x' + xkey[0:4].encode('hex'), 16) - header
-    if xtype not in [0]:
+    if xtype not in ([0, 1] if TESTNET else [0]):
         raise BaseException('Invalid header')
     n = 33 if prv else 32
     K_or_k = xkey[13+n:]
@@ -792,21 +826,6 @@ def xpub_from_pubkey(xtype, cK):
     assert cK[0] in ['\x02','\x03']
     return serialize_xpub(xtype, chr(0)*32, cK)
 
-
-def bip32_derivation(s):
-    assert s.startswith('m/')
-    s = s[2:]
-    for n in s.split('/'):
-        if n == '': continue
-        i = int(n[:-1]) + BIP32_PRIME if n[-1] == "'" else int(n)
-        yield i
-
-def is_bip32_derivation(x):
-    try:
-        [ i for i in bip32_derivation(x)]
-        return True
-    except :
-        return False
 
 def bip32_private_derivation(xprv, branch, sequence):
     assert sequence.startswith(branch)

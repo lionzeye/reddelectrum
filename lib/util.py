@@ -213,11 +213,12 @@ def android_data_dir():
     PythonActivity = jnius.autoclass('org.kivy.android.PythonActivity')
     return PythonActivity.mActivity.getFilesDir().getPath() + '/data'
 
-def android_headers_dir():
-    d = android_ext_dir() + '/org.reddelectrum.reddelectrum'
+def android_headers_path():
+    path = android_ext_dir() + '/org.reddelectrum.reddelectrum/blockchain_headers'
+    d = os.path.dirname(path)
     if not os.path.exists(d):
         os.mkdir(d)
-    return d
+    return path
 
 def android_check_data_dir():
     """ if needed, move old directory to sandbox """
@@ -226,7 +227,7 @@ def android_check_data_dir():
     old_electrum_dir = ext_dir + '/reddelectrum'
     if not os.path.exists(data_dir) and os.path.exists(old_electrum_dir):
         import shutil
-        new_headers_path = android_headers_dir() + '/blockchain_headers'
+        new_headers_path = android_headers_path()
         old_headers_path = old_electrum_dir + '/blockchain_headers'
         if not os.path.exists(new_headers_path) and os.path.exists(old_headers_path):
             print_error("Moving headers file to", new_headers_path)
@@ -235,8 +236,11 @@ def android_check_data_dir():
         shutil.move(old_electrum_dir, data_dir)
     return data_dir
 
-def get_headers_dir(config):
-    return android_headers_dir() if 'ANDROID_DATA' in os.environ else config.path
+def get_headers_path(config):
+    if 'ANDROID_DATA' in os.environ:
+        return android_headers_path()
+    else:
+        return os.path.join(config.path, 'blockchain_headers')
 
 def user_dir():
     if 'ANDROID_DATA' in os.environ:
@@ -343,22 +347,18 @@ def time_difference(distance_in_time, include_seconds):
     else:
         return "over %d years" % (round(distance_in_minutes / 525600))
 
-mainnet_block_explorers = {
+block_explorer_info = {
     'live.reddcoin.com': ('https://live.reddcoin.com',
-                        {'tx': 'tx', 'addr': 'address'}),
+                        {'tx': 'tx', 'addr': 'addr'}),
     'system default': ('blockchain:',
                         {'tx': 'tx', 'addr': 'address'}),
 }
 
-def block_explorer_info():
-    import bitcoin
-    return testnet_block_explorers if bitcoin.TESTNET else mainnet_block_explorers
-
 def block_explorer(config):
-    return config.get('block_explorer', 'SoChain')
+    return config.get('block_explorer', 'live.reddcoin.com')
 
 def block_explorer_tuple(config):
-    return block_explorer_info().get(block_explorer(config))
+    return block_explorer_info.get(block_explorer(config))
 
 def block_explorer_URL(config, kind, item):
     be_tuple = block_explorer_tuple(config)
@@ -368,7 +368,7 @@ def block_explorer_URL(config, kind, item):
     if not kind_str:
         return
     url_parts = [be_tuple[0], kind_str, item]
-    return "/".join(url_parts)
+    return "".join(url_parts)
 
 # URL decode
 #_ud = re.compile('%([0-9a-hA-H]{2})', re.MULTILINE)
@@ -426,7 +426,7 @@ def parse_URI(uri, on_pr=None):
     r = out.get('r')
     sig = out.get('sig')
     name = out.get('name')
-    if on_pr and (r or (name and sig)):
+    if r or (name and sig):
         def get_payment_request_thread():
             import paymentrequest as pr
             if name and sig:

@@ -95,26 +95,26 @@ class NodesListWidget(QTreeWidget):
     def update(self, network):
         self.clear()
         self.addChild = self.addTopLevelItem
-        chains = network.get_blockchains()
-        n_chains = len(chains)
-        for k, items in chains.items():
-            b = network.blockchains[k]
-            name = b.get_name()
-            if n_chains >1:
-                x = QTreeWidgetItem([name + '@%d'%b.get_checkpoint(), '%d'%b.height()])
-                x.setData(0, Qt.UserRole, 1)
-                x.setData(1, Qt.UserRole, b.checkpoint)
-            else:
-                x = self
-            for i in items:
-                star = ' *' if i == network.interface else ''
-                item = QTreeWidgetItem([i.host + star, '%d'%i.tip])
-                item.setData(0, Qt.UserRole, 0)
-                item.setData(1, Qt.UserRole, i.server)
-                x.addChild(item)
-            if n_chains>1:
-                self.addTopLevelItem(x)
-                x.setExpanded(True)
+        #chains = network.get_blockchains()
+        #n_chains = len(chains)
+        #for k, items in chains.items():
+            #b = network.blockchains[k]
+            #name = b.get_name()
+            # if n_chains >1:
+            #     x = QTreeWidgetItem([name + '@%d'%b.get_checkpoint(), '%d'%b.height()])
+            #     x.setData(0, Qt.UserRole, 1)
+            #     x.setData(1, Qt.UserRole, b.checkpoint)
+            # else:
+            #x = self
+            #for i in items:
+                #star = ' *' if i == network.interface else ''
+                #item = QTreeWidgetItem([i.host + star, '%d'%i.tip])
+                #item.setData(0, Qt.UserRole, 0)
+                #item.setData(1, Qt.UserRole, i.server)
+                #x.addChild(item)
+            # if n_chains>1:
+            #     self.addTopLevelItem(x)
+            #     x.setExpanded(True)
 
         h = self.header()
         h.setStretchLastSection(False)
@@ -357,16 +357,16 @@ class NetworkChoiceLayout(object):
         n = len(self.network.get_interfaces())
         status = _("Connected to %d nodes.")%n if n else _("Not connected")
         self.status_label.setText(status)
-        chains = self.network.get_blockchains()
-        if len(chains)>1:
-            chain = self.network.blockchain()
-            checkpoint = chain.get_checkpoint()
-            name = chain.get_name()
-            msg = _('Chain split detected at block %d')%checkpoint + '\n'
-            msg += (_('You are following branch') if auto_connect else _('Your server is on branch'))+ ' ' + name
-            msg += ' (%d %s)' % (chain.get_branch_size(), _('blocks'))
-        else:
-            msg = ''
+        #chains = self.network.get_blockchains()
+        # if len(chains)>1:
+        #     chain = self.network.blockchain()
+        #     checkpoint = chain.get_checkpoint()
+        #     name = chain.get_name()
+        #     msg = _('Chain split detected at block %d')%checkpoint + '\n'
+        #     msg += (_('You are following branch') if auto_connect else _('Your server is on branch'))+ ' ' + name
+        #     msg += ' (%d %s)' % (chain.get_branch_size(), _('blocks'))
+        #else:
+        msg = ''
         self.split_label.setText(msg)
         self.nodes_list_widget.update(self.network)
 

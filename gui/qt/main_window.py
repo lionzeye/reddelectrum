@@ -2542,7 +2542,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, PrintError):
         unit_combo.currentIndexChanged.connect(on_unit)
         gui_widgets.append((unit_label, unit_combo))
 
-        block_explorers = sorted(util.block_explorer_info().keys())
+        block_explorers = sorted(util.block_explorer_info.keys())
         msg = _('Choose which online block explorer to use for functions that open a web browser')
         block_ex_label = HelpLabel(_('Online Block Explorer') + ':', msg)
         block_ex_combo = QComboBox()
